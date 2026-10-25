@@ -55,8 +55,25 @@ rect(8,8,107,23,'#080c23cc');rect(8,8,2,23,'#8d82ff');ctx.fillStyle='#e5e8ff';ct
 }
 function collide(a,b){return a.x<b[0]+b[2]&&a.x+a.w>b[0]&&a.y<b[1]+b[3]&&a.y+a.h>b[1]}
 function die(){deaths++;shakeFrames=9;burst(player.x+7,player.y+9,'#ff628c',16);sfx('death');reset()}
-function update(){frame++;if(playing){const l=levels[level],oldY=player.y;const target=(keys.right?1:0)-(keys.left?1:0);if(target){player.vx+=target*.42;player.vx=Math.max(-3.25,Math.min(3.25,player.vx));player.face=target}else player.vx*=.78;if(Math.abs(player.vx)<.08)player.vx=0;player.x+=player.vx;player.x=Math.max(0,Math.min(W-player.w,player.x));player.vy=Math.min(10,player.vy+.34);player.y+=player.vy;player.on=false;
-if(player.vy>=0){for(const p of l.plats){if(oldY+player.h<=p[1]+2&&player.y+player.h>=p[1]&&player.x+player.w>p[0]+2&&player.x<p[0]+p[2]-2){const landingSpeed=player.vy;player.y=p[1]-player.h;player.vy=0;player.on=true;if(landingSpeed>2){player.squash=1;burst(player.x+player.w/2,player.y+player.h,'#9f9aff',3);if(landingSpeed>4)sfx('land')}break}}}
+function update(){frame++;if(playing){const l=levels[level],oldX=player.x,oldY=player.y;const target=(keys.right?1:0)-(keys.left?1:0);if(target){player.vx+=target*.42;player.vx=Math.max(-3.25,Math.min(3.25,player.vx));player.face=target}else player.vx*=.78;if(Math.abs(player.vx)<.08)player.vx=0;player.x+=player.vx;player.x=Math.max(0,Math.min(W-player.w,player.x));player.vy=Math.min(10,player.vy+.34);player.y+=player.vy;player.on=false;
+for(const p of l.plats){
+const overlapX=player.x+player.w>p[0]&&player.x<p[0]+p[2];
+const overlapY=player.y+player.h>p[1]&&player.y<p[1]+p[3];
+if(player.vy>=0&&oldY+player.h<=p[1]&&player.y+player.h>=p[1]&&overlapX){
+const landingSpeed=player.vy;player.y=p[1]-player.h;player.vy=0;player.on=true;
+if(landingSpeed>2){player.squash=1;burst(player.x+player.w/2,player.y+player.h,'#9f9aff',3);if(landingSpeed>4)sfx('land')}
+}else if(player.vy<0&&oldY>=p[1]+p[3]&&player.y<=p[1]+p[3]&&overlapX){
+player.y=p[1]+p[3];player.vy=0;
+}
+}
+for(const p of l.plats){
+const overlapY=player.y+player.h>p[1]&&player.y<p[1]+p[3];
+if(overlapY&&oldX+player.w<=p[0]&&player.x+player.w>p[0]){
+player.x=p[0]-player.w;player.vx=0;
+}else if(overlapY&&oldX>=p[0]+p[2]&&player.x<p[0]+p[2]){
+player.x=p[0]+p[2];player.vx=0;
+}
+}
 if(player.on)coyote=7;else coyote=Math.max(0,coyote-1);if(jumpBuffer>0)jumpBuffer--;if(jumpBuffer>0&&coyote>0){player.vy=-8.7;player.on=false;coyote=0;jumpBuffer=0;burst(player.x+player.w/2,player.y+player.h,'#9c8dff',5);sfx('jump')}
 if(l.crystals){l.crystals.forEach(([cx,cy],i)=>{if(!collected[level]?.[i]&&Math.abs((player.x+player.w/2)-(cx+2))<12&&Math.abs((player.y+player.h/2)-(cy+2))<14){collected[level][i]=true;crystalCount++;burst(cx,cy,'#6effe6',12);sfx('portal')}})}
 if(player.on&&Math.abs(player.vx)>.7&&frame%8===0)burst(player.x+player.w/2,player.y+player.h,'#8586df',2);if(!keys.jump&&player.vy< -3)player.vy*=.96;player.anim+=Math.abs(player.vx);
