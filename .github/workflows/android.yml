@@ -31,6 +31,18 @@ jobs:
         run: npx cap add android
       - name: Sync game into Android
         run: npx cap sync android
+      - name: Lock Android orientation to landscape
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('android/app/src/main/AndroidManifest.xml')
+          text = p.read_text()
+          target = 'android:name=".MainActivity"'
+          if target not in text:
+              raise SystemExit('MainActivity activity tag not found in AndroidManifest.xml')
+          text = text.replace(target, target + ' android:screenOrientation="landscape"', 1)
+          p.write_text(text)
+          PY
       - name: Build debug APK
         working-directory: android
         run: |
