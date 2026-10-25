@@ -91,6 +91,10 @@
 @keyframes revealIn{from{opacity:0;transform:translateY(10px) scale(.95)}to{opacity:1;transform:translateY(0) scale(1)}}
 @keyframes burstSpin{to{transform:rotate(360deg)}}
 @media(max-width:370px){#app{padding-left:8px;padding-right:8px}#overlay:has(.shopPanel[style*="display: flex"]){padding:14px 12px;gap:10px}.lootArt{height:62px}.lootName{font-size:9px}.lootOdds{font-size:7px}.shopHero{padding:12px}.skinCollection{gap:6px}}
+#overlay:has(.shopPanel[style*="display: flex"]) > .menuKicker,
+#overlay:has(.shopPanel[style*="display: flex"]) > #ovTitle,
+#overlay:has(.shopPanel[style*="display: flex"]) > #ovText,
+#overlay:has(.shopPanel[style*="display: flex"]) > .menuDivider{display:none!important}
 @media(prefers-reduced-motion:reduce){.chestPreview,.revealBurst,.revealBackdrop{animation:none}}
 
 </style></head>
