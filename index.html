@@ -92,6 +92,7 @@
 .rouletteTile.winner small{color:#fff}
 .rouletteStatus{margin-top:5px;color:#9d9bc9;font-size:8px;letter-spacing:2px;text-align:center;min-height:12px}
 #revealSprite{display:none}
+.shopReveal.isRolling .revealRarity,.shopReveal.isRolling .revealName,.shopReveal.isRolling .revealText,.shopReveal.isRolling .revealPrimary,.shopReveal.isRolling .revealSecondary{visibility:hidden;opacity:0}.shopReveal.isRolling .revealEyebrow{color:#b9b5e9}.shopReveal.isRolling .revealCard{min-height:330px}.shopReveal.isRolling #revealBurst{opacity:.55}
 .revealRarity{color:var(--reveal-color,#b8a8ff);font-size:9px;letter-spacing:3px;font-weight:bold}
 .revealName{margin-top:8px;color:#fff;font-size:clamp(19px,6vw,26px);line-height:1.2;font-weight:1000;text-shadow:0 0 15px color-mix(in srgb,var(--reveal-color,#8773ef) 50%,transparent)}
 .revealText{margin:8px 0 16px;color:#a3a9cd;font-size:10px;line-height:1.6}
@@ -211,7 +212,7 @@ function renderCollection(){const grid=document.getElementById('skinCollection')
 function showGachaReveal(prize,box){
   lastPrize=prize;
   const color=rarityColors[prize.rarity]||box.color,modal=document.getElementById('shopReveal');
-  modal.style.setProperty('--reveal-color',color);
+  modal.classList.add('isRolling');modal.style.setProperty('--reveal-color','#9b92e8');
   document.getElementById('revealEyebrow').textContent='RELÍQUIA DESCOBERTA · '+box.tier;
   document.getElementById('revealBurst').textContent=box.symbol;
   document.getElementById('revealRarity').textContent=prize.rarity.toUpperCase();
@@ -233,7 +234,7 @@ function showGachaReveal(prize,box){
     const tick=now=>{if(start===null)start=now;const t=Math.min(1,(now-start)/duration),ease=t<.72?.72*(1-Math.pow(1-t/.72,3)):0.72+0.28*(1-Math.pow(1-(t-.72)/.28,4));track.style.transform='translateX('+(target*ease)+'px)';if(t<1)requestAnimationFrame(tick);else finish()};
     requestAnimationFrame(tick);
   };
-  const finish=()=>{const win=track.children[winnerIndex];if(win){win.classList.add('winner');win.style.setProperty('--tile-color',color)}status.textContent='✦ SKIN IDENTIFICADA';tone(prize.rarity==='Lendário'?880:prize.rarity==='Épico'?690:520,.18,'triangle',.045,prize.rarity==='Lendário'?440:180);if(prize.rarity==='Lendário'){setTimeout(()=>tone(990,.24,'triangle',.04,350),170);setTimeout(()=>tone(1320,.3,'triangle',.035,300),340)}setTimeout(()=>{wrap.style.display='none';status.style.display='none';canvas.style.display='block';document.getElementById('revealText').textContent='A skin foi adicionada permanentemente à sua coleção.';document.getElementById('revealBurst').textContent='✦';},850)};
+  const finish=()=>{const win=track.children[winnerIndex];if(win){win.classList.add('winner');win.style.setProperty('--tile-color',color)}status.textContent='✦ SKIN IDENTIFICADA';tone(prize.rarity==='Lendário'?880:prize.rarity==='Épico'?690:520,.18,'triangle',.045,prize.rarity==='Lendário'?440:180);if(prize.rarity==='Lendário'){setTimeout(()=>tone(990,.24,'triangle',.04,350),170);setTimeout(()=>tone(1320,.3,'triangle',.035,300),340)}setTimeout(()=>{wrap.style.display='none';status.style.display='none';canvas.style.display='block';modal.classList.remove('isRolling');modal.style.setProperty('--reveal-color',color);document.getElementById('revealText').textContent='A skin foi adicionada permanentemente à sua coleção.';document.getElementById('revealBurst').textContent='✦';},850)};
   requestAnimationFrame(()=>requestAnimationFrame(run));
 }
 function closeGachaReveal(){document.getElementById('shopReveal').style.display='none';}
