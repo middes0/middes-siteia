@@ -230,7 +230,7 @@ function showGachaReveal(prize,box){
   const run=()=>{const viewport=wrap.clientWidth,center=viewport/2,target=-(winnerIndex*step+tileWidth/2-center);const reduced=!motionOn||window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if(reduced){track.style.transform='translateX('+target+'px)';finish();return}
     status.textContent='IDENTIFICANDO SKINS...';let start=null;const duration=5200;
-    const tick=now=>{if(start===null)start=now;const t=Math.min(1,(now-start)/duration),ease=t<.72?1-Math.pow(1-t/.72,3)*.72:0.72+0.28*(1-Math.pow(1-(t-.72)/.28,4));track.style.transform='translateX('+(target*ease)+'px)';if(t<1)requestAnimationFrame(tick);else finish()};
+    const tick=now=>{if(start===null)start=now;const t=Math.min(1,(now-start)/duration),ease=t<.72?.72*(1-Math.pow(1-t/.72,3)):0.72+0.28*(1-Math.pow(1-(t-.72)/.28,4));track.style.transform='translateX('+(target*ease)+'px)';if(t<1)requestAnimationFrame(tick);else finish()};
     requestAnimationFrame(tick);
   };
   const finish=()=>{const win=track.children[winnerIndex];if(win){win.classList.add('winner');win.style.setProperty('--tile-color',color)}status.textContent='✦ SKIN IDENTIFICADA';tone(prize.rarity==='Lendário'?880:prize.rarity==='Épico'?690:520,.18,'triangle',.045,prize.rarity==='Lendário'?440:180);if(prize.rarity==='Lendário'){setTimeout(()=>tone(990,.24,'triangle',.04,350),170);setTimeout(()=>tone(1320,.3,'triangle',.035,300),340)}setTimeout(()=>{wrap.style.display='none';status.style.display='none';canvas.style.display='block';document.getElementById('revealText').textContent='A skin foi adicionada permanentemente à sua coleção.';document.getElementById('revealBurst').textContent='✦';},850)};
